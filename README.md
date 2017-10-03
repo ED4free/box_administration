@@ -1,3 +1,3 @@
 # EdBox
 
-test of upgrade
+test of upgrade2
