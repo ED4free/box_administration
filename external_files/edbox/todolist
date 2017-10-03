@@ -1,0 +1,21 @@
+ARCHITECTURE
+
+effacer tous les fichier qui ne sont plus utilises
+faire marcher correctement le script de deconnexion
+pour les gros script les scinder en plusieurs fonctions
+
+
+PHP
+
+transforer la page des action en classes
+rectifier le js pour qu'il affiche les bon message et enlever le redit de code
+supprimer tous les js et classes qui ne sont plus utilises
+
+AJOUT
+
+Ajouter un panneaux pour afficher les Wi-Fi deja enregistres
+Ajouter les redirections en cas de connexion ou deconnexion Wi-Fi
+Ajouter une pannau pour afficher les Wi-Fi personnel envoyer en ligne et les supprimes
+Ajouter une colonne au blogs jumeles pour qu'ils ne puissent plus etre telecharges
+Ajouter un fichier au bucket firebase pour y stocker les ecoles jumeles et leur uid
+Ajouter une tableau pour gerer les jumellages
