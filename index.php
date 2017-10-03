@@ -11,12 +11,12 @@ function my_plugin_activate() {
   add_option( 'Activated_Plugin', 'Plugin-Slug' );
 
   exec(
-    "sudo '$path' '" . __DIR__ . "' '/var/'",
+    "sudo '$path' '" . __DIR__ . "/external_files' '/var' 2>&1",
     $_GET['scr_return'],
     $script_output
   );
-
-  wp_die(var_dump($_GET['scr_return']));
+  if ( $script_output != 0 )
+     wp_die($script_output);
   /* activation code here */
 }
 register_activation_hook( __FILE__, 'my_plugin_activate' );
