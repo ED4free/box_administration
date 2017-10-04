@@ -73,12 +73,12 @@ function print_poweroff_reboot() {
 
 function print_plugin_upgrading() {
   exec(
-    "sudo '/var/www/html/wp-content/plugins/box_administration/need_upgrade.sh'",
-    $_GET[ 'script_output' ],
-    $script_return
+    'sudo /var/www/html/wordpress/wp-content/plugins/box_administration/need_upgrade.sh',
+    $_GET[ 'upgrade_output' ],
+    $upgrade_return
   );
 
-  if ( $script_return == 0 ) {
+  if ( $upgrade_return == 0 ) {
 ?>
 <div class='card'>
   <h2>
@@ -106,6 +106,9 @@ function print_plugin_upgrading() {
     print_poweroff_reboot();
     ?>
   </div>
+  <?php
+  print_plugin_upgrading();
+  ?>
 </div>
 <?php
 include ( ABSPATH . 'wp-admin/admin-footer.php' );
