@@ -1,3 +1,5 @@
 #! /bin/bash
 
-git pull origin master
+cd `basename "$0""`
+git pull origin master && exit 0
+exit 1

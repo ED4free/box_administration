@@ -30,6 +30,10 @@ class Box_Admin_Actions_Manager {
       case "reboot":
 	Box_Admin_Actions_Manager::reboot();
 	return true;
+
+      case "upgrade":
+	Box_Admin_Actions_Manager::upgrade();
+	return true;
 	
       default:
 	return false;
@@ -71,7 +75,7 @@ class Box_Admin_Actions_Manager {
 
   static function poweroff( ) {
     exec(
-      'sudo poweroff &',
+      'sudo poweroff',
       $_GET[ 'script_output' ],
       $script_return
     );
@@ -79,9 +83,17 @@ class Box_Admin_Actions_Manager {
 
   static function reboot( ) {
     exec(
-      'sudo reboot &',
+      'sudo reboot',
       $_GET[ 'script_output' ],
       $script_return
+    );
+  }
+
+  static function upgrade( ) {
+    exec(
+      'sudo /var/www/html/wordpress/wp-content/plugins/box_administration/upgrade.sh',
+      $_GET[ 'upgrade_output' ],
+      $upgrade_return
     );
   }
 }
