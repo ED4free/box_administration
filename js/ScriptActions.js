@@ -46,6 +46,17 @@ const DISCONNECT_STATES_MESSAGES = {
 	    "Une erreur est survenue pendant la déconnexion."
 	]
 };
+const UPGRADE_STATES_MESSAGES = {
+    0 : "Préparation de la mise à jour.",
+    1 : "Mise à jour en cours...",
+    2 : "Mise à jour en cours..",
+    3 : "Mise à jour en cours.",
+    4 :
+	[
+	    "Mise à jour réussi.",
+	    "Une erreur est survenue pendant la mise à jour."
+	]
+};
 
 /** POST FUNCTIOM **/
 function printReporter(status, noticeStatus = "notice-success") {
@@ -164,4 +175,13 @@ function postDisconnect() {
 	return;
     actions = "actions=disconnect";
     doPost(DISCONNECT_STATES_MESSAGES, actions);
+}
+
+function postUpgrade() {
+    var actions;
+
+    if (!verifyRequiredVar())
+	return;
+    actions = "actions=upgrade";
+    doPost(UPGRADE_STATES_MESSAGES, actions);
 }
