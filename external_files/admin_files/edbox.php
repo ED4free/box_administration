@@ -73,7 +73,7 @@ function print_poweroff_reboot() {
 
 function print_plugin_upgrading() {
   exec(
-    "sudo '" . NEED_UPGRADE_SCRIPT . "' 'plugin path' 'var path'",
+    "sudo '/var/www/html/wp-content/plugins/box_administration/need_upgrade.sh'",
     $_GET[ 'script_output' ],
     $script_return
   );
