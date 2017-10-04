@@ -64,11 +64,30 @@ function print_internet_connexion() {
 function print_poweroff_reboot() {
 ?>
 <h2>
-  <?php echo esc_html( 'Eteindre / Redémarrer la box'); ?>
+  <?php echo esc_html( 'Eteindre / Redémarrer la box' ); ?>
 </h2>
 <button onclick='postPoweroff()'><?php echo esc_html( 'Eteindre' ); ?></button>
 <button onclick='postReboot()'><?php echo esc_html( 'Redémarrer' ); ?></button>
 <?php
+}
+
+function print_plugin_upgrading() {
+  exec(
+    "sudo '" . NEED_UPGRADE_SCRIPT . "' 'plugin path' 'var path'",
+    $_GET[ 'script_output' ],
+    $script_return
+  );
+
+  if ( $script_return == 0 ) {
+?>
+<div class='card'>
+  <h2>
+    <?php echo esc_html( 'Mettre a jour le plugin' ); ?>
+  </h2>
+  <button onclick='postUpgrade()'><?php echo esc_html( 'Mettre a jour' ); ?></button>
+</div>
+<?php
+  }
 }
 
 ?>
