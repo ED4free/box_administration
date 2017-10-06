@@ -9,14 +9,9 @@ PrintWifiName () {
 }
 
 PrintIp () {
-    IP=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | tail -n 1`
-
-    if ! [ -z "$IP" -o "$IP" == '10.10.0.1' ];
-    then
-        eval "$1=$IP"
-    else
-	eval "$1='No connexion'"
-    fi
+    INTERFACE=`route | sed '1,2d;/default/d;/wlan0/d' | rev | cut -d ' ' -f1 | rev | head -n 1`
+    IP=`ifconfig "$INTERFACE" | grep 'inet addr:' | cut -d ':' -f2 | cut -d ' ' -f 1`
+    eval "$1=$IP"
 }
 
 PrintAvailableWifi() {
@@ -25,8 +20,8 @@ PrintAvailableWifi() {
 
 AlreadyConnect &&
     (PrintIp ip_result
-     echo "Connecter à: `PrintWifiName`"
-     echo "Mon adress ip: $ip_result"
+     echo "Connecté à: `PrintWifiName`"
+     echo "Mon adresse ip: $ip_result"
      exit 0) ||
 	(echo "`PrintAvailableWifi`"
 	 exit 1) &&
