@@ -111,6 +111,7 @@ function print_plugin_upgrading() {
   ?>
 </div>
 <?php
+include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsScrpt.php');
 include ( ABSPATH . 'wp-admin/admin-footer.php' );
 ?>
 <script src='<?php echo ( plugins_url( PLUGIN_JS_BASE_REPOSITORY . 'oXHR.js') ); ?>'>
