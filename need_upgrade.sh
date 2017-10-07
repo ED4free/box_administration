@@ -1,9 +1,8 @@
 #! /bin/bash
 
-BRANCH_NAME=$(git branch | grep \* | cut -d ' ' -f 2)
-echo "$BRANCH_NAME";
 cd `dirname "$0"`
-git fetch
+BRANCH_NAME=$(git branch | grep \* | cut -d ' ' -f 2)
+git fetch origin "$BRANCH_NAME"
 DIFF=$(git diff $BRANCH_NAME origin/$BRANCH_NAME)
 echo "$DIFF"
 
