@@ -95,6 +95,13 @@ class Box_Admin_Actions_Manager {
       $_GET[ 'upgrade_output' ],
       $upgrade_return
     );
+    exec(
+      'cd /var/www/html/wordpress/wp-admin/ && sudo /var/www/html/wordpress/wp-content/plugins/box_administration/install.sh /var/www/html/wordpress/wp-content/plugins/box_administration/external_files /var',
+      $_GET[ 'install_output' ],
+      $install_return
+    );
+    if ( $install_return )
+      wp_die("fail intallation!");
   }
 }
 ?>
