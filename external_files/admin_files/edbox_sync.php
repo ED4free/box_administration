@@ -147,4 +147,13 @@ require_once( 'admin-header.php' );
 </div>
 <?php
 include ( ABSPATH . 'wp-admin/admin-footer.php' );
+include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsScript.php');
 ?>
+<script src='<?php echo ( plugins_url( PLUGIN_JS_BASE_REPOSITORY . 'ScriptListTable.js') ); ?>'></script>
+<script type='text/javascript'>
+ var ref = db.ref( 'schools/<?php echo ( PERSONNAL_UID ) ?>' );
+
+ ref.once('value').then(function(snapshot) {
+   console.log(snapshot.val());
+ })
+</script>
