@@ -23,7 +23,7 @@ if ( ! empty( $_POST[ "blog" ] ) && (! empty( $_POST[ "action" ] )  || ! empty( 
 
 class Box_Admin_Personnal_Blog_List extends Box_Admin_Twinning_List_Table {
   public function init_values() {
-    $this->init_data();
+    //$this->init_data();
     $this->init_columns();
   }
 
@@ -143,9 +143,18 @@ include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsSc
 ?>
 <script src='<?php echo ( plugins_url( PLUGIN_JS_BASE_REPOSITORY . 'ScriptListTable.js') ); ?>'></script>
 <script type='text/javascript'>
- var ref = db.ref( 'schools/<?php echo ( PERSONNAL_UID ) ?>' );
+ var ref = db.ref( 'schools/<?php echo ( PERSONNAL_UID ); ?>' );
 
  ref.once('value').then(function(snapshot) {
-   console.log(snapshot.val());
- })
+   var val = snapshot.val();
+   console.log(val);
+   if (val == null) {
+     return;
+   }
+   for (blogName in val) {
+     console.log(blogName);
+     console.log(val[blogName]);
+     addRow("<?php echo ( PERSONNAL_UID ); ?>", blogName, val[blogName].date, val[blogName].size);
+   }
+ });
 </script>

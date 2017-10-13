@@ -1,5 +1,10 @@
 function addRow(path, blogName, uploadDate, size) {
     var list = document.getElementById("the-list");
+
+    var oldElems = list.getElementsByClassName("no-items");
+    if (oldElems[0])
+	oldElems[0].remove();
+    
     var new_tr = document.createElement("tr");
     
     var th_elem = document.createElement("th");
