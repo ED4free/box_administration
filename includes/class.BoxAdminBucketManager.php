@@ -37,8 +37,6 @@ class Box_Admin_Bucket_Manager {
       $_GET[ 'scr_output' ],
       $script_return
     );
-    
-    return array( $_GET[ 'scr_output' ], $script_return );
   }
 
   static function upload_file( $fileName ) {
@@ -50,8 +48,6 @@ class Box_Admin_Bucket_Manager {
       $_GET[ 'scr_output' ],
       $script_return
     );
-    
-    return array( $_GET[ 'scr_output' ], $script_return );
   }
 
   static function remove_file( $fileName ) {
@@ -62,8 +58,6 @@ class Box_Admin_Bucket_Manager {
       $_GET[ 'scr_output' ],
       $script_return
     );
-
-    return array( $_GET[ 'scr_output' ], $script_return );
   }
 }
 ?>

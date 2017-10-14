@@ -47,6 +47,7 @@ if ( empty( $_GET[ 'actions' ] ) ) {
 <div id='actionReporter'></div>
 <?php
 include ( ABSPATH . 'wp-admin/admin-footer.php' );
+include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsScript.php');
 ?>
 <script src='<?php echo ( plugins_url( PLUGIN_JS_BASE_REPOSITORY . 'oXHR.js') ); ?>'>
 </script>

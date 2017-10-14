@@ -69,12 +69,6 @@ class Box_Admin_Sync_Manager {
     return mysql_query( 'SELECT * FROM wp_posts WHERE ID=' . $blog . ';');
   }
 
-  private function supress_accents( $str ) {
-    $str = strtr($str, 'ÁÀÂÄÃÅÇÉÈÊËÍÏÎÌÑÓÒÔÖÕÚÙÛÜÝ', 'AAAAAACEEEEEIIIINOOOOOUUUUY');
-    $str = strtr($str, 'áàâäãåçéèêëíìîïñóòôöõúùûüýÿ', 'aaaaaaceeeeiiiinooooouuuuyy');
-    return ( $str );
-  }
-  
   private function create_tmp_repository( $data, $xml_result ) {
     mkdir( TMP_LOCAL_PATH . $data->post_name );
     $xml_result->save( TMP_LOCAL_PATH . $data->post_name . "/" . BLOG_XML_FILE_NAME );
@@ -106,7 +100,7 @@ class Box_Admin_Sync_Manager {
   
   private function export_blog_into_bucket( $data ) {
     require_once ( PLUGIN_INCLUDES_REPOSITORY . 'class.BoxAdminBucketManager.php' );
-    echo var_dump( Box_Admin_Bucket_Manager::upload_file( $data->post_name ) );
+    Box_Admin_Bucket_Manager::upload_file( $data->post_name );
   }
   
   // DOWNLOADING
@@ -209,6 +203,44 @@ class Box_Admin_Sync_Manager {
     $xml->appendChild( $blog_xml );
     return ( $xml );
   }
+
+  public function fileSizeConvert( $bytes )
+  {
+    $bytes = floatval($bytes);
+    $arBytes = array(
+      0 => array(
+        "UNIT" => "TB",
+        "VALUE" => pow(1024, 4)
+      ),
+      1 => array(
+        "UNIT" => "GB",
+        "VALUE" => pow(1024, 3)
+      ),
+      2 => array(
+        "UNIT" => "MB",
+        "VALUE" => pow(1024, 2)
+      ),
+      3 => array(
+        "UNIT" => "KB",
+        "VALUE" => 1024
+      ),
+      4 => array(
+        "UNIT" => "B",
+        "VALUE" => 1
+      ),
+    );
+    
+    foreach($arBytes as $arItem)
+    {
+      if($bytes >= $arItem["VALUE"])
+      {
+        $result = $bytes / $arItem["VALUE"];
+        $result = str_replace(".", "," , strval(round($result, 2)))." ".$arItem["UNIT"];
+        break;
+      }
+    }
+    return $result;
+  }
   
   public function upload( $blog ) {
     if ( empty( $blog ) )
@@ -223,6 +255,14 @@ class Box_Admin_Sync_Manager {
       $this->create_tmp_repository( $data, $xml_result );
       $this->compress_tmp_repository( $data );
       $this->export_blog_into_bucket( $data );
+      echo "{\n";
+      echo '"' . PERSONNAL_UID . "\": {\n";
+      echo "\"$data->post_name\": {\n";
+      echo '"size": "' . $this->fileSizeConvert( filesize( TMP_LOCAL_PATH . $data->post_name . COMPRESS_FILE_EXTENSION ) ) . "\",\n";
+      echo '"date": "' . "$data->post_modified\"\n";
+      echo "}\n";
+      echo "}\n";
+      echo '}';
       unlink( TMP_LOCAL_PATH . $data->post_name . COMPRESS_FILE_EXTENSION );
     }
   }
@@ -253,7 +293,8 @@ class Box_Admin_Sync_Manager {
     foreach ( $blogs as $blogPath) {
       if ( empty( $blogPath ) )
         continue;
-      echo var_dump(Box_Admin_Bucket_Manager::remove_file( $blogPath ));
+      Box_Admin_Bucket_Manager::remove_file( $blogPath );
+      echo "$blogPath,";
     }
   }
   
