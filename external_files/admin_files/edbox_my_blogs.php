@@ -147,14 +147,16 @@ include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsSc
 
  ref.once('value').then(function(snapshot) {
    var val = snapshot.val();
-   console.log(val);
    if (val == null) {
      return;
    }
    for (blogName in val) {
-     console.log(blogName);
-     console.log(val[blogName]);
-     addRow("<?php echo ( PERSONNAL_UID ); ?>", blogName, val[blogName].date, val[blogName].size);
+     addPersonnalBlogsRow(
+       "<?php echo ( PERSONNAL_UID ); ?>",
+       blogName,
+       val[blogName].date,
+       val[blogName].size
+     );
    }
  });
 </script>

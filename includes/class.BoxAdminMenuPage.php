@@ -64,8 +64,8 @@ class Box_Admin_Menu_Page {
   private function add_edbox_my_blogs_submenu() {
     add_submenu_page(
       'edbox.php',
-      esc_html( 'Blogs publiés' ),
-      esc_html( 'Mes blogs' ),
+      esc_html( 'Articles publiés' ),
+      esc_html( 'Nos articles' ),
       'edit_posts',
       'edbox_my_blogs.php'
     );

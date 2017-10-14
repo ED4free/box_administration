@@ -26,7 +26,7 @@ if ( ! file_exists( '/tmp/school_names.twinning.php' ) )
 
 class Box_Admin_Twinning_Blog_List extends Box_Admin_Twinning_List_Table {
   public function init_values() {
-    $this->init_data();
+    //$this->init_data();
     $this->init_columns();
   }
 
@@ -151,9 +151,28 @@ include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsSc
 ?>
 <script src='<?php echo ( plugins_url( PLUGIN_JS_BASE_REPOSITORY . 'ScriptListTable.js') ); ?>'></script>
 <script type='text/javascript'>
- var ref = db.ref( 'schools/<?php echo ( PERSONNAL_UID ) ?>' );
-
- ref.once('value').then(function(snapshot) {
-   console.log(snapshot.val());
- })
+ db.ref('schoolNames').once('value').then(function(schoolNamesSnapshot) {
+   var schoolNames = schoolNamesSnapshot.val();
+   console.log(schoolNames);
+   <?php
+   foreach( TWINNINGS_UID as $uid) {
+   ?>
+     var ref = db.ref( 'schools/<?php echo ( $uid ); ?>' );
+     
+     ref.once('value').then(function(snapshot) {
+       var val = snapshot.val();
+       for (blogName in val) {
+	 addTwinningsRow(
+	   "<?php echo ( $uid ); ?>",
+	   blogName,
+	   val[blogName].date,
+	   schoolNames["<?php echo ( $uid ); ?>"],
+	   val[blogName].size
+	 );
+       }
+     })
+     <?php
+     }
+     ?>
+ });
 </script>
