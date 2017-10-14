@@ -35,7 +35,7 @@ class Box_Admin_Menu_Page {
     $hook = add_submenu_page(
       'edbox.php',
       esc_html( 'Synchronisation avec les écoles jumelées' ),
-      esc_html( 'Blogs jumelés' ),
+      esc_html( 'Articles jumelés' ),
       'edit_posts',
       'edbox_sync.php'
     );
