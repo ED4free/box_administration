@@ -42,7 +42,6 @@ class Box_Admin_Bucket_Manager {
   static function upload_file( $fileName ) {
     $local_path = TMP_LOCAL_PATH . $fileName . COMPRESS_FILE_EXTENSION;
     $bucket_path = BUCKET_URL . PERSONNAL_UID . "/";
-    
     exec (
       'sudo ' . SYNC_BLOG_SCRIPT . " '$local_path' '$bucket_path' 1>/dev/null 2>&1",
       $_GET[ 'scr_output' ],

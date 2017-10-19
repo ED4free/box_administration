@@ -34,7 +34,6 @@ class Box_Admin_Sync_Manager {
     $attached_media = get_attached_media( "", $data->ID );
     $sql_query = "SELECT * FROM wp_posts WHERE ";
     
-    
     foreach( $attached_media as $media ) {
       $sql_query .= "ID=" . $media->ID . " OR ";
       $attached_media_xml = $xml->createElement( Box_Admin_Sync_Manager::XML_ATTACHED_MEDIA_NAME );
@@ -72,7 +71,7 @@ class Box_Admin_Sync_Manager {
   private function create_tmp_repository( $data, $xml_result ) {
     mkdir( TMP_LOCAL_PATH . $data->post_name );
     $xml_result->save( TMP_LOCAL_PATH . $data->post_name . "/" . BLOG_XML_FILE_NAME );
-    $medias = $xml_result->getElementsByTagName( Box_Admin_Sync_Manager::XML_MEDIA_ELEM_NAME );
+    $medias = $xml_result->getElementsByTagName( Box_Admin_Sync_Manager::XML_ATTACHED_MEDIA_NAME );
     $medias_guid = array();
     foreach ( $medias as $media ){
       foreach ( $media->childNodes as $node){
@@ -160,8 +159,7 @@ class Box_Admin_Sync_Manager {
   }
   
   private function upload_attached_medias_to_wordpress( $blog_xml, $blog_unarchive_name, $new_post_id, $twinning_user_id ) {
-    $node_media_xml = $blog_xml->getElementsByTagName( Box_Admin_Sync_Manager::XML_MEDIA_ELEM_NAME );
-    
+    $node_media_xml = $blog_xml->getElementsByTagName( Box_Admin_Sync_Manager::XML_ATTACHED_MEDIA_NAME );
     foreach ( $node_media_xml as $media ) {
       $exploded_guid = explode( "/", $media->getElementsByTagName("guid")[0]->nodeValue );
       $name = end( $exploded_guid );
@@ -209,23 +207,23 @@ class Box_Admin_Sync_Manager {
     $bytes = floatval($bytes);
     $arBytes = array(
       0 => array(
-        "UNIT" => "TB",
+        "UNIT" => "To",
         "VALUE" => pow(1024, 4)
       ),
       1 => array(
-        "UNIT" => "GB",
+        "UNIT" => "Go",
         "VALUE" => pow(1024, 3)
       ),
       2 => array(
-        "UNIT" => "MB",
+        "UNIT" => "Mo",
         "VALUE" => pow(1024, 2)
       ),
       3 => array(
-        "UNIT" => "KB",
+        "UNIT" => "Ko",
         "VALUE" => 1024
       ),
       4 => array(
-        "UNIT" => "B",
+        "UNIT" => "o",
         "VALUE" => 1
       ),
     );
