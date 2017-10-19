@@ -261,7 +261,7 @@ class Box_Admin_Sync_Manager {
       echo "}\n";
       echo "}\n";
       echo '}';
-      //unlink( TMP_LOCAL_PATH . $data->post_name . COMPRESS_FILE_EXTENSION );
+      unlink( TMP_LOCAL_PATH . $data->post_name . COMPRESS_FILE_EXTENSION );
     }
   }
   
@@ -273,7 +273,7 @@ class Box_Admin_Sync_Manager {
     foreach ( $blogs as $blogPath) {
       if ( empty( $blogPath ) )
         continue;
-      //$this->download_archive_from_bucket( $blogPath );
+      $this->download_archive_from_bucket( $blogPath );
       $blog_unarchive_name = $this->unarchive_new_blog( $blogPath );
       $twinning_user_id = $this->create_twinning_user();
       $blog_xml = $this->load_blog_xml( $blog_unarchive_name );
