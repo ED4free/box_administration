@@ -24,8 +24,13 @@ class Box_Admin_Meta_Box {
   
   public function print_upload_meta_box() {
     //Si le blog est deja en ligne, afficher un champ pour le supprimer
-    echo "<a href='edbox_upload_download.php?actions=upload&blog=" . $_GET[ 'post' ] . "'>";
-    echo esc_html( 'Partager avec les écoles jumelées' );
-    echo "</a>";
+    if ( current_user_can( "manage_options" ) ) {
+      echo "<a href='edbox_upload_download.php?actions=upload&blog=" . $_GET[ 'post' ] . "'>";
+      echo esc_html( 'Partager avec les écoles jumelées' );
+      echo "</a>";
+    }
+    else {
+      echo esc_html( "Veillez vous connecter avec un compte administrateur." );
+    }
   }
 }
