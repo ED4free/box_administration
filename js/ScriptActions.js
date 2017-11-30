@@ -57,6 +57,17 @@ const UPGRADE_STATES_MESSAGES = {
 	    "Une erreur est survenue pendant la mise à jour."
 	]
 };
+const SERVICE_STATES_MESSAGES = {
+    0 : "Préparation de la modification du service.",
+    1 : "Modification du service en cours...",
+    2 : "Modification du service en cours..",
+    3 : "Modification du service en cours.",
+    4 :
+	[
+	    "Modification du service réussi.",
+	    "Une erreur est survenue pendant la modification du service."
+	]
+};
 
 /** POST FUNCTIOM **/
 function printReporter(status, noticeStatus = "notice-success") {
@@ -77,6 +88,7 @@ function printReporter(status, noticeStatus = "notice-success") {
 function postRequest(actions) {
     xhr.open('POST', 'edbox_actions.php', true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    console.log(actions);
     xhr.send(actions);
 }
 
@@ -184,4 +196,13 @@ function postUpgrade() {
 	return;
     actions = "actions=upgrade";
     doPost(UPGRADE_STATES_MESSAGES, actions);
+}
+
+function postServices(serviceName, action) {
+    var actions;
+
+    if (!verifyRequiredVar())
+	return;
+    actions = "actions=service_" + action + "&service=" + serviceName;
+    doPost(SERVICE_STATES_MESSAGES, actions);
 }

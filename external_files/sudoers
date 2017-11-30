@@ -23,6 +23,7 @@ www-data ALL=NOPASSWD: /var/edbox/script/wifi_connexion/connect_to_wifi.sh
 www-data ALL=NOPASSWD: /var/edbox/script/wifi_connexion/disconnect_to_wifi.sh
 www-data ALL=NOPASSWD: /sbin/poweroff
 www-data ALL=NOPASSWD: /sbin/reboot
+www-data ALL=NOPASSWD: /usr/sbin/service
 www-data ALL=NOPASSWD: /var/edbox/script/sync/get_blogs_list.sh
 www-data ALL=NOPASSWD: /var/edbox/script/sync/sync_blog.sh
 www-data ALL=NOPASSWD: /var/edbox/script/sync/remove_blog.sh

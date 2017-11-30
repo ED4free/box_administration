@@ -16,6 +16,7 @@ class Box_Admin_Menu_Page {
     $this->add_edbox_wifi_submenu();
     $this->add_edbox_download_submenu();
     $this->add_edbox_my_blogs_submenu();
+    $this->add_edbox_services_submenu();
     //$this->add_edbox_twinning_submenu();
   }
 
@@ -68,6 +69,16 @@ class Box_Admin_Menu_Page {
       esc_html( 'Nos articles' ),
       'edit_posts',
       'edbox_my_blogs.php'
+    );
+  }
+
+  private function add_edbox_services_submenu() {
+    add_submenu_page(
+      'edbox.php',
+      esc_html( 'Services' ),
+      esc_html( 'Services' ),
+      'manage_options',
+      'edbox_services.php'
     );
   }
 }

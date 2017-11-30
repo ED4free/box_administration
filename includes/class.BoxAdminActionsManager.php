@@ -34,6 +34,14 @@ class Box_Admin_Actions_Manager {
       case "upgrade":
 	Box_Admin_Actions_Manager::upgrade();
 	return true;
+
+      case "service_start":
+	Box_Admin_Actions_Manager::service_start();
+	return true;
+
+      case "service_stop":
+	Box_Admin_Actions_Manager::service_stop();
+	return true;
 	
       default:
 	return false;
@@ -102,6 +110,22 @@ class Box_Admin_Actions_Manager {
     );
     if ( $install_return )
       wp_die("fail intallation!");
+  }
+
+  static function service_start( ) {
+    exec(
+      'sudo service "' . $_POST[ 'service' ] . '" start',
+      $_GET[ 'start_service' ],
+      $start_service_return
+    );
+  }
+
+  static function service_stop( ) {
+    exec(
+      'sudo service "' . $_POST[ 'service' ] . '" stop',
+      $_GET[ 'start_service' ],
+      $start_service_return
+    );
   }
 }
 ?>
