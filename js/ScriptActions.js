@@ -85,8 +85,8 @@ function printReporter(status, noticeStatus = "notice-success") {
     paragraphElem.appendChild(paragraphText);
 }
 
-function postRequest(actions) {
-    xhr.open('POST', 'edbox_actions.php', true);
+function postRequest(actions, async = true) {
+    xhr.open('POST', 'edbox_actions.php', async);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     console.log(actions);
     xhr.send(actions);
@@ -124,10 +124,10 @@ function getStateChangeCallbackFunction(statesMessages) {
     });
 }
 
-function doPost(statesMessages, actions) {
+function doPost(statesMessages, actions, async = true) {
     if (xhr.readyState == XMLHttpRequest.UNSENT) {
 	xhr.onreadystatechange = getStateChangeCallbackFunction(statesMessages);
-	postRequest(actions);
+	postRequest(actions, async);
     }
 }
 
@@ -204,5 +204,5 @@ function postServices(serviceName, action) {
     if (!verifyRequiredVar())
 	return;
     actions = "actions=service_" + action + "&service=" + serviceName;
-    doPost(SERVICE_STATES_MESSAGES, actions);
+    doPost(SERVICE_STATES_MESSAGES, actions, false);
 }
