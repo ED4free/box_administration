@@ -8,7 +8,7 @@ function removeNoItemsMessage(list, className) {
 	oldElems[0].remove();
 }
 
-function createCheckBox(path) {
+function createCheckBox(path, isCheck = false) {
     var th_elem = document.createElement("th");
     th_elem["scope"] = "row";
     th_elem["className"] = "check-column";
@@ -17,6 +17,7 @@ function createCheckBox(path) {
     input_elem["type"] = "checkbox";
     input_elem["name"] = "blog[]";
     input_elem["value"] = path;
+    input_elem.checked = isCheck;
     
     th_elem.appendChild(input_elem);
     return (th_elem);
@@ -108,5 +109,31 @@ function addTwinningsRow(path, blogName, uploadDate, schoolName, size) {
     new_tr.appendChild(createColumn("schoolName", "Provenance", schoolName));
     new_tr.appendChild(createColumn("size", "Taille", size));
 
+    list.appendChild(new_tr);
+}
+
+function addSchoolNameRow(name, isTwin, schoolUid) {
+    var list = getList("the-list");
+    var new_tr = createTrElem();
+
+    removeNoItemsMessage(list, "no-items");
+    var cb = createCheckBox(schoolUid, isTwin).firstChild;
+    cb.onclick = function() {
+	if (cb.checked) {
+	    twinVal.push(schoolUid);
+	}
+	else {
+	    twinVal.splice(twinVal.indexOf(schoolUid), 1);
+	}
+	console.log(twinVal);
+    };
+    new_tr.appendChild(cb);
+    new_tr.appendChild(
+	createTitleTdElem(
+	    name,
+	    "",
+	    ""
+	)
+    );
     list.appendChild(new_tr);
 }
