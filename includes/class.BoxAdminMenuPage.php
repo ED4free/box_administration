@@ -12,12 +12,16 @@ class Box_Admin_Menu_Page {
   }
 
   public function add_edbox_admin_menus() {
+    include_once( 'Connected.php' );    
+    
     $this->add_edbox_admin_menu();
     $this->add_edbox_wifi_submenu();
-    $this->add_edbox_download_submenu();
-    $this->add_edbox_my_blogs_submenu();
+    if (is_connected()) {
+      $this->add_edbox_download_submenu();
+      $this->add_edbox_my_blogs_submenu();
+      $this->add_edbox_twinning_submenu();
+    }
     $this->add_edbox_services_submenu();
-    $this->add_edbox_twinning_submenu();
   }
 
   private function add_edbox_admin_menu() {

@@ -5,14 +5,122 @@
  */
 
 require_once( dirname(  __FILE__ ) . '/admin.php' );
-require_once( 'admin-header.php' );
-require_once( WP_PLUGIN_DIR . '/box_administration/includes/class.BoxAdminTwinningListTable.php' );
+require_once( PLUGIN_INCLUDES_REPOSITORY . 'class.BoxAdminTwinningListTable.php' );
+require_once( PLUGIN_INCLUDES_REPOSITORY . 'class.BoxAdminBucketManager.php' );
 
-$myListTable = new Box_Admin_Twinning_List_Table();
-echo '<div class="wrap"><h2>' . esc_html( 'Interface de jumelage' ) . '</h2>';
+class Box_Admin_School_Name_List extends Box_Admin_Twinning_List_Table {
+  public function init_values() {
+    $this->init_columns();
+  }
+
+  private function init_columns() {
+    $this->set_columns( array(
+      'cb'		=> '<input type="checkbox" />',
+      'schoolName'	=> 'Nom'
+    ) );
+    $this->set_sortable( array(
+      'schoolName'	=> array( 'schoolName', true)
+    ) );
+  }
+}
+
+$myListTable = new Box_Admin_School_Name_List();
+$myListTable->init_values();
 $myListTable->prepare_items();
-$myListTable->display();
-echo '</div>';
-include ( ABSPATH . 'wp-admin/admin-footer.php' );
-// Ici afficher la liste des écoles disponnibles pour le jumelage
+
+require_once( 'admin-header.php' );
 ?>
+
+<div class='wrap'>
+  <h2><?php echo esc_html( 'Mes blogs mis en ligne' ); ?></h2>
+</div>
+<div id='actionReporter'></div>
+<div class='card'>
+  <p>
+    mon Identifiant: <?php echo ( PERSONNAL_UID ); ?><br/>
+    Mon nom: <input type='text' id='school-name' />
+  </p>
+</div>
+<form method="post">
+  <?php
+  $myListTable->search_box( 'Rechercher', 'search_id' );
+  $myListTable->display();
+  ?>
+</form>
+<button onClick='UploadData()'><?php echo esc_html ( 'Mettre à jour' ); ?></button>
+
+<?php
+include ( ABSPATH . 'wp-admin/admin-footer.php' );
+include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsScript.php' );
+?>
+<script src='<?php echo ( plugins_url( PLUGIN_JS_BASE_REPOSITORY . 'ScriptListTable.js') ); ?>'></script>
+<script src='<?php echo ( plugins_url( PLUGIN_JS_BASE_REPOSITORY . 'oXHR.js') ); ?>'>
+</script>
+<script src='<?php echo ( plugins_url( PLUGIN_JS_BASE_REPOSITORY . 'ScriptSync.js') ); ?>'>
+</script>
+<script type="text/javascript">
+ var nameInput = document.getElementById('school-name');
+ var nameRef = db.ref('schoolNames/<?php echo ( PERSONNAL_UID ) ?>');
+
+ nameRef.once('value').then(function(snapshot) {
+   var val = snapshot.val();
+   if (val == null) {
+     return;
+   }
+   nameInput.value = val;
+ });
+</script>
+<script type="text/javascript">
+ function isArrayContain(arr, elem) {
+   return (arr.indexOf(elem) !== -1);
+ }
+ 
+ var schoolsDiv = document.getElementById('school-list');
+ var twinRef = db.ref('twinnings/<?php echo ( PERSONNAL_UID ); ?>')
+ var schoolsRef = db.ref('schoolNames/');
+ var val;
+ var twinVal;
+
+ schoolsRef.once('value').then(function(snapshot) {
+   val = snapshot.val();
+   if (val == null) {
+     return;
+   }
+   twinRef.once('value').then(function(snapTwin) {
+     twinVal = snapTwin.val();
+
+     twinVal = twinVal.split(',');
+     for (schoolName in val) {
+       if (schoolName != "<?php echo ( PERSONNAL_UID ); ?>") {
+	 addSchoolNameRow(val[schoolName], isArrayContain(twinVal, schoolName), schoolName);
+       }
+     }
+   });
+ });
+</script>
+<script type="text/javascript">
+ function ManageTwinning(twinUid) {
+   console.log(twinUid);
+ }
+ 
+ function UploadData() {
+   var name = nameInput.value;
+
+   printReporter("Mise à jour en cours...");
+   nameRef.set(name).then(function() {
+     var twinStr = "";
+     
+     for (uid in twinVal) {
+       twinStr += twinVal[uid] + ",";
+     }
+     twinStr = twinStr.substring(0, twinStr.length - 1);
+     twinRef.set(twinStr).then(function() {
+       printReporter("Mise à jour réussie");
+     }).catch(function(error) {
+       printReporter(error, "notice-failure");
+     });
+   }).catch(function(error) {
+     printReporter(error, "notice-failure");
+   });
+ }
+</script>

@@ -22,7 +22,10 @@ class Box_Admin_Manager {
   }
   
   private function add_actions() {
-    $this->m_metaBoxes->add_actions();
+    include_once( 'Connected.php' );
+    
+    if ($is_conn)
+      $this->m_metaBoxes->add_actions();
     $this->m_menuPages->add_actions();
   }
 }

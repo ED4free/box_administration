@@ -153,26 +153,26 @@ include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsSc
 <script type='text/javascript'>
  db.ref('schoolNames').once('value').then(function(schoolNamesSnapshot) {
    var schoolNames = schoolNamesSnapshot.val();
-   console.log(schoolNames);
-   <?php
-   foreach( TWINNINGS_UID as $uid) {
-   ?>
-     var ref = db.ref( 'schools/<?php echo ( $uid ); ?>' );
-     
-     ref.once('value').then(function(snapshot) {
-       var val = snapshot.val();
-       for (blogName in val) {
-	 addTwinningsRow(
-	   "<?php echo ( $uid ); ?>",
-	   blogName,
-	   val[blogName].date,
-	   schoolNames["<?php echo ( $uid ); ?>"],
-	   val[blogName].size
-	 );
-       }
-     })
-     <?php
+   
+   db.ref('twinnings/<?php echo ( PERSONNAL_UID ) ?>').once('value').then(function(twinningSnapshot) {
+     var twinningsUid = twinningSnapshot.val();
+     twinningsUid = twinningsUid.split(',');
+
+     for (uid in twinningsUid) {
+       db.ref('schools/' + twinningsUid[uid]).once('value').then(function(snapshot) {
+	 var val = snapshot.val();
+	 var twinUid = snapshot.key;
+	 for (blogName in val) {
+	   addTwinningsRow(
+	     twinUid,
+	     blogName,
+	     val[blogName].date,
+	     schoolNames[twinUid],
+	     val[blogName].size
+	   );
+	 }
+       })
      }
-     ?>
+   });
  });
 </script>
