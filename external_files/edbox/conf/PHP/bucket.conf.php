@@ -14,12 +14,4 @@ const WORDPRESS_DB_NAME		= 'wordpress' ;
 /** SYNC UIDS **/
 const TWINNING_USERNAME		= 'jumelage' ;
 const TWINNING_PASSWORD		= 'twinning' ;
-const PERSONNAL_UID		= 'h0MInsUufFNXlp5s3H12P9CO1Jez' ;
-const TWINNINGS_UID		= array(
-  'ULQnIeOg7MeXMCAfhyp1I4dNqnP2',
-  'h1Jiu9OYPm1Hk7jYmMckmXXqPx5g',
-  'MmArCYTAgYhwn2KFPUEbtGiYlja2',
-  'eRZTwvC3LFGs5R4EVnQzQMvAWuc9',
-  '2uW7PccXVzEmLdvJ5nV6oDvMt7H8'
-);
 ?>
