@@ -24,10 +24,6 @@ class Box_Admin_School_Name_List extends Box_Admin_Twinning_List_Table {
   }
 }
 
-$myListTable = new Box_Admin_School_Name_List();
-$myListTable->init_values();
-$myListTable->prepare_items();
-
 require_once( 'admin-header.php' );
 ?>
 
@@ -41,12 +37,6 @@ require_once( 'admin-header.php' );
     Mon nom: <input type='text' id='school-name' />
   </p>
 </div>
-<form method="post">
-  <?php
-  $myListTable->search_box( 'Rechercher', 'search_id' );
-  $myListTable->display();
-  ?>
-</form>
 <button onClick='UploadData()'><?php echo esc_html ( 'Mettre à jour' ); ?></button>
 
 <?php
@@ -71,34 +61,6 @@ include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsSc
  });
 </script>
 <script type="text/javascript">
- function isArrayContain(arr, elem) {
-   return (arr.indexOf(elem) !== -1);
- }
- 
- var schoolsDiv = document.getElementById('school-list');
- var twinRef = db.ref('twinnings/<?php echo ( PERSONNAL_UID ); ?>')
- var schoolsRef = db.ref('schoolNames/');
- var val;
- var twinVal;
-
- schoolsRef.once('value').then(function(snapshot) {
-   val = snapshot.val();
-   if (val == null) {
-     return;
-   }
-   twinRef.once('value').then(function(snapTwin) {
-     twinVal = snapTwin.val();
-
-     twinVal = twinVal.split(',');
-     for (schoolName in val) {
-       if (schoolName != "<?php echo ( PERSONNAL_UID ); ?>") {
-	 addSchoolNameRow(val[schoolName], isArrayContain(twinVal, schoolName), schoolName);
-       }
-     }
-   });
- });
-</script>
-<script type="text/javascript">
  function ManageTwinning(twinUid) {
    console.log(twinUid);
  }
@@ -108,17 +70,7 @@ include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsSc
 
    printReporter("Mise à jour en cours...");
    nameRef.set(name).then(function() {
-     var twinStr = "";
-     
-     for (uid in twinVal) {
-       twinStr += twinVal[uid] + ",";
-     }
-     twinStr = twinStr.substring(0, twinStr.length - 1);
-     twinRef.set(twinStr).then(function() {
-       printReporter("Mise à jour réussie");
-     }).catch(function(error) {
-       printReporter(error, "notice-failure");
-     });
+     printReporter("Mise à jour réussie");
    }).catch(function(error) {
      printReporter(error, "notice-failure");
    });
