@@ -57,6 +57,17 @@ const UPGRADE_STATES_MESSAGES = {
 	    "Une erreur est survenue pendant la mise à jour."
 	]
 };
+const SERVICE_STATES_MESSAGES = {
+    0 : "Préparation de la modification du service.",
+    1 : "Modification du service en cours...",
+    2 : "Modification du service en cours..",
+    3 : "Modification du service en cours.",
+    4 :
+	[
+	    "Modification du service réussi.",
+	    "Une erreur est survenue pendant la modification du service."
+	]
+};
 
 /** POST FUNCTIOM **/
 function printReporter(status, noticeStatus = "notice-success") {
@@ -74,9 +85,10 @@ function printReporter(status, noticeStatus = "notice-success") {
     paragraphElem.appendChild(paragraphText);
 }
 
-function postRequest(actions) {
-    xhr.open('POST', 'edbox_actions.php', true);
+function postRequest(actions, async = true) {
+    xhr.open('POST', 'edbox_actions.php', async);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    console.log(actions);
     xhr.send(actions);
 }
 
@@ -112,10 +124,10 @@ function getStateChangeCallbackFunction(statesMessages) {
     });
 }
 
-function doPost(statesMessages, actions) {
+function doPost(statesMessages, actions, async = true) {
     if (xhr.readyState == XMLHttpRequest.UNSENT) {
 	xhr.onreadystatechange = getStateChangeCallbackFunction(statesMessages);
-	postRequest(actions);
+	postRequest(actions, async);
     }
 }
 
@@ -184,4 +196,13 @@ function postUpgrade() {
 	return;
     actions = "actions=upgrade";
     doPost(UPGRADE_STATES_MESSAGES, actions);
+}
+
+function postServices(serviceName, action) {
+    var actions;
+
+    if (!verifyRequiredVar())
+	return;
+    actions = "actions=service_" + action + "&service=" + serviceName;
+    doPost(SERVICE_STATES_MESSAGES, actions, false);
 }

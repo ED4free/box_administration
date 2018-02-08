@@ -12,11 +12,16 @@ class Box_Admin_Menu_Page {
   }
 
   public function add_edbox_admin_menus() {
+    include_once( 'Connected.php' );    
+    
     $this->add_edbox_admin_menu();
     $this->add_edbox_wifi_submenu();
-    $this->add_edbox_download_submenu();
-    $this->add_edbox_my_blogs_submenu();
-    //$this->add_edbox_twinning_submenu();
+    if (is_connected()) {
+      $this->add_edbox_download_submenu();
+      $this->add_edbox_my_blogs_submenu();
+      $this->add_edbox_twinning_submenu();
+    }
+    $this->add_edbox_services_submenu();
   }
 
   private function add_edbox_admin_menu() {
@@ -46,7 +51,7 @@ class Box_Admin_Menu_Page {
       'edbox.php',
       esc_html( 'Interface de jumelage' ),
       esc_html( 'Jumelage' ),
-      'edit_posts',
+      'manage_options',
       'edbox_twinning.php'
     );
   }
@@ -68,6 +73,16 @@ class Box_Admin_Menu_Page {
       esc_html( 'Nos articles' ),
       'edit_posts',
       'edbox_my_blogs.php'
+    );
+  }
+
+  private function add_edbox_services_submenu() {
+    add_submenu_page(
+      'edbox.php',
+      esc_html( 'Services' ),
+      esc_html( 'Services' ),
+      'manage_options',
+      'edbox_services.php'
     );
   }
 }

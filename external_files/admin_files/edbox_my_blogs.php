@@ -147,6 +147,7 @@ include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsSc
 
  ref.once('value').then(function(snapshot) {
    var val = snapshot.val();
+   
    if (val == null) {
      return;
    }

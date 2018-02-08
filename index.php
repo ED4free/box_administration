@@ -3,7 +3,9 @@
 Plugin Name: Box administration
  */
 
-require_once '/var/edbox/conf/PHP/edbox.conf.php';
+if ( file_exists( '/var/edbox/conf/PHP/edbox.conf.php' ) ) {
+  require_once '/var/edbox/conf/PHP/edbox.conf.php';
+}
 require 'includes/class.BoxAdminMain.php';
 
 function my_plugin_activate() {

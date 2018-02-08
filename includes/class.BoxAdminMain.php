@@ -10,6 +10,7 @@ class Box_Admin_Manager {
   public function __construct() {
     $this->initialize();
     $this->add_actions();
+    $this->check_for_uid();
   }
   
   static function Construct() {
@@ -22,8 +23,51 @@ class Box_Admin_Manager {
   }
   
   private function add_actions() {
-    $this->m_metaBoxes->add_actions();
+    include_once( 'Connected.php' );
+    
+    if ($is_conn)
+      $this->m_metaBoxes->add_actions();
     $this->m_menuPages->add_actions();
+  }
+
+  private function check_for_uid() {
+    include ( BUCKET_CONF_PHP_FILE );
+
+    if ( PERSONNAL_UID != 'PERSONNAL_UID' )
+      return;
+
+    //const PERSONNAL_UID = $this->generate_uid();
+
+    $file_input = "const PERSONNAL_UID		= '" . $this->generate_uid() . "' ;\n?>\n";
+    file_put_contents( '/var/edbox/conf/PHP/bucket.conf.php', $file_input, FILE_APPEND | LOCK_EX );
+    //wp_die( $file_input );
+  }
+
+  private function gen_char($index) {
+    if ( $index < 26 ) {
+      $new_char = "a";
+      while ( $index-- )
+	$new_char++;
+      return ( $new_char );
+    }
+    else if ( $index < 52 ) {
+      $new_char = "A";
+      $index -= 26;
+      while ( $index-- )
+        $new_char++;
+      return ( $new_char );
+    }
+    else {
+      return ( $index - 52);
+    }
+  }
+
+  private function generate_uid() {
+    $uid = "";
+    for ( $i = 0; $i < 28; ++$i) {
+      $uid .= $this->gen_char( rand( 0, 61 ) );
+    }
+    return ( $uid );
   }
 }
 ?>

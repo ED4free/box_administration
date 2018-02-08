@@ -18,5 +18,5 @@ else
     echo "file not exist"
     cp -r $1/edbox/* $2/edbox || exit 1
 fi;
-cp $1/sudoers /etc/ || exit 1
+cp $1/sudoers /etc/sudoers.d/box_administration || exit 1
 exit 0
