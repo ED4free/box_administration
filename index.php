@@ -18,7 +18,7 @@ function my_plugin_activate() {
     $script_output
   );
   if ( $script_output != 0 )
-     wp_die($script_output);
+     wp_die( var_dump($_GET['scr_return']));
   /* activation code here */
 }
 register_activation_hook( __FILE__, 'my_plugin_activate' );
