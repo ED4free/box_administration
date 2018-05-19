@@ -10,7 +10,7 @@ PrintWifiName () {
 
 PrintIp () {
     INTERFACE=`route | sed '1,2d;/default/d;/wlan0/d' | rev | cut -d ' ' -f1 | rev | head -n 1`
-    IP=`ifconfig "$INTERFACE" | grep 'inet addr:' | cut -d ':' -f2 | cut -d ' ' -f 1`
+    IP=`ifconfig "$INTERFACE" | grep 'inet ' | awk '{print $2}'`
     eval "$1=$IP"
 }
 

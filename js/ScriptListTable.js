@@ -137,3 +137,10 @@ function addSchoolNameRow(name, isTwin, schoolUid) {
     );
     list.appendChild(new_tr);
 }
+
+function clearTable() {
+    var list = getList("the-list");
+    while (list.firstChild) {
+        list.removeChild(list.firstChild);
+    }
+}

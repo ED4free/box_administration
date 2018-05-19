@@ -93,8 +93,10 @@ class Box_Admin_Sync_Manager {
       $_GET[ 'scr_output' ],
       $script_return
     );
-    if ( $script_return )
-      wp_die( "Erreur lors de la compression" );
+    if ( $script_return ) {
+      echo( "Erreur lors de la compression" );
+      throw new Exception();
+    }
   }
   
   private function export_blog_into_bucket( $data ) {
@@ -120,8 +122,10 @@ class Box_Admin_Sync_Manager {
       $_GET[ "scr_output" ],
       $script_return
     );
-    if ( $script_return )
-      wp_die( "Erreur lors de la décompression du fichier" );
+    if ( $script_return ) {
+      echo 'Erreur lors de la décompression du fichier';
+      throw new Exception();
+    }
     return ( $blog_unarchive_name );
   }
   
@@ -186,8 +190,10 @@ class Box_Admin_Sync_Manager {
 	  wp_update_attachment_metadata( $attachment_id,  $attachment_data );
 	}
       }
-      else
-	wp_die( "Une erreur est survenue lors de la creation des medias" );
+      else {
+        echo 'Une erreur est survenue lors de la creation des medias';
+        throw new Exception();
+      }
     }
   }
   
@@ -241,8 +247,10 @@ class Box_Admin_Sync_Manager {
   }
   
   public function upload( $blog ) {
-    if ( empty( $blog ) )
-      wp_die( 'Aucun blog sélectionné.' );
+    if ( empty( $blog ) ) {
+      echo 'Aucun blog sélectionné.';
+      throw new Exception();
+    }
     
     $blogs = explode(',', $blog);
     foreach ( $blogs as $blogPath) {
@@ -266,9 +274,10 @@ class Box_Admin_Sync_Manager {
   }
   
   public function download( $blog ) {
-    if ( empty( $blog ) )
-      wp_die( 'Aucun blog sélectionné.' );
-  
+    if ( empty( $blog ) ) {
+      echo( 'Aucun blog sélectionné.' );
+      throw new Exception();      
+    }
     $blogs = explode(',', $blog);
     foreach ( $blogs as $blogPath) {
       if ( empty( $blogPath ) )
@@ -284,8 +293,10 @@ class Box_Admin_Sync_Manager {
   }
   
   public function remove( $blog ) {
-    if ( empty( $blog ) )
-      wp_die( 'Aucun blog sélectionné.' );
+    if ( empty( $blog ) ) {
+      echo( 'Aucun blog sélectionné.' );
+      throw new Exception();
+    }
     require_once ( PLUGIN_INCLUDES_REPOSITORY . 'class.BoxAdminBucketManager.php' );
     $blogs = explode(',', $blog);
     foreach ( $blogs as $blogPath) {
