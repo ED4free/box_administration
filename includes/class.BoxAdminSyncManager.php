@@ -138,7 +138,6 @@ class Box_Admin_Sync_Manager {
   private function load_blog_xml( $blog_unarchive_name ) {
     $blog_xml = new DOMDocument();
     $blog_xml->load( TMP_LOCAL_PATH . $blog_unarchive_name . '/' . BLOG_XML_FILE_NAME );
-    echo var_dump(TMP_LOCAL_PATH . $blog_unarchive_name . '/' . BLOG_XML_FILE_NAME);
     return ( $blog_xml );
   }
   
@@ -164,37 +163,64 @@ class Box_Admin_Sync_Manager {
   
   private function upload_attached_medias_to_wordpress( $blog_xml, $blog_unarchive_name, $new_post_id, $twinning_user_id ) {
     $node_media_xml = $blog_xml->getElementsByTagName( Box_Admin_Sync_Manager::XML_ATTACHED_MEDIA_NAME );
+    echo "1";
     foreach ( $node_media_xml as $media ) {
+      echo "2";
       $exploded_guid = explode( "/", $media->getElementsByTagName("guid")[0]->nodeValue );
+      echo "3";
       $name = end( $exploded_guid );
+      echo "4";
       $media_tmp_path = TMP_LOCAL_PATH . $blog_unarchive_name . "/" . $name;
+      echo "5";
       $upload_file = wp_upload_bits( $name, null, file_get_contents( $media_tmp_path ), "$exploded_guid[5]/$exploded_guid[6]" );
+      echo "6";
       if ( !$upload_file[ 'error' ] ) {
-	$wp_filetype = wp_check_filetype( $name, null );
-	$attachement = array (
-	  'post_mime_type' => $wp_filetype[ 'type' ],
-	  'post_parent' => $new_post_id,
-	  'post_title' => preg_replace('/\.[^.]+$/', '', $name),
-	  'post_content' => '',
-	  'post_status' => 'inherit',
-	  'post_author' => $twinning_user_id
-	);
-	
-  $attachment_id = wp_insert_attachment( $attachement, $upload_file[ 'file' ], $new_post_id );
-	if ( ! is_wp_error( $attachment_id ) ) {
-	  require_once( ABSPATH . "wp-admin" . '/includes/image.php' );
-	  $attachment_data = wp_generate_attachment_metadata(
-	    $attachment_id,
-	    $upload_file[ 'file' ]
-	  );
-	  wp_update_attachment_metadata( $attachment_id,  $attachment_data );
-	}
+        echo "7";
+        $wp_filetype = wp_check_filetype( $name, null );
+        echo "8";
+	      $attachement = array (
+          'post_mime_type' => $wp_filetype[ 'type' ],
+          'post_parent' => $new_post_id,
+          'post_title' => preg_replace('/\.[^.]+$/', '', $name),
+          'post_content' => '',
+          'post_status' => 'inherit',
+          'post_author' => $twinning_user_id
+        );
+        echo "9";
+        $attachment_id = wp_insert_attachment( $attachement, $upload_file[ 'file' ], $new_post_id );
+        echo "10";
+        if ( ! is_wp_error( $attachment_id ) ) {
+          echo "11";
+          if (! function_exists( 'wp_handle_upload' ) ) {
+            require_once( ABSPATH . 'wp-admin/includes/file.php' );
+          }
+          require_once( ABSPATH . "wp-admin" . '/includes/image.php' );
+          echo "12 ";
+          echo var_dump($attachement_id);
+          echo var_dump($upload_file[ 'file' ]);
+          try {
+          $attachment_data = wp_generate_attachment_metadata(
+            $attachment_id,
+            $upload_file[ 'file' ]
+          );
+          echo "13";
+          wp_update_attachment_metadata( $attachment_id,  $attachment_data );
+          }
+          catch (Exception $e) {
+            echo $e->getMessage();
+            throw new Exception();
+          }
+          echo "14";
+        }
+        echo "15";
       }
       else {
         echo 'Une erreur est survenue lors de la creation des medias';
         throw new Exception();
       }
+      echo "16";
     }
+    echo "17";
   }
   
   /** PUBLIC FUNCTIONS**/
@@ -281,12 +307,19 @@ class Box_Admin_Sync_Manager {
       if ( empty( $blogPath ) )
         continue;
       $this->download_archive_from_bucket( $blogPath );
+      echo "ici ";
       $blog_unarchive_name = $this->unarchive_new_blog( $blogPath );
+      echo "et la ";
       $twinning_user_id = $this->create_twinning_user();
+      echo "ou encore ici? ";
       $blog_xml = $this->load_blog_xml( $blog_unarchive_name );
+      echo "et encore la ";
       $new_post = $this->create_post_array( $blog_xml, $twinning_user_id );
+      echo "ou la? ";
       $new_post_id = wp_insert_post( $new_post );
+      echo "peut etre ici? ";
       $this->upload_attached_medias_to_wordpress( $blog_xml, $blog_unarchive_name, $new_post_id, $twinning_user_id );
+      echo "maais pas ici svp ";
     }
   }
   
