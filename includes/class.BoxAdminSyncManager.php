@@ -46,8 +46,8 @@ class Box_Admin_Sync_Manager {
   }
   
   private function add_media_to_xml( $blog_xml, $sql_query, $xml ) {
-    $media_sql_result = mysql_query( $sql_query );
-    while ( $media_data = mysql_fetch_assoc( $media_sql_result ) ) {
+    $media_sql_result = mysqli_query( $sql_query );
+    while ( $media_data = mysqli_fetch_assoc( $media_sql_result ) ) {
       $media_xml = $xml->createElement( Box_Admin_Sync_Manager::XML_MEDIA_ELEM_NAME );
       foreach ( $media_data as $key => $value )
 	      $media_xml->appendChild( $xml->createElement( "$key", "$value" ) );
@@ -203,7 +203,6 @@ class Box_Admin_Sync_Manager {
     $blog_xml = $this->add_blog_to_xml( $xml, $data );
     $sql_query = $this->add_attached_media_to_xml( $blog_xml, $data, $xml );
     $blog_xml = $this->add_media_to_xml( $blog_xml, $sql_query, $xml );
-    
     $xml->appendChild( $blog_xml );
     return ( $xml );
   }
@@ -251,11 +250,10 @@ class Box_Admin_Sync_Manager {
       echo 'Aucun blog sélectionné.';
       throw new Exception();
     }
-    
     $blogs = explode(',', $blog);
     foreach ( $blogs as $blogPath) {
       if ( empty( $blogPath ) )
-        continue;      
+      continue;
       $data = get_post($blogPath);
       $xml_result = $this->generate_xml( $data );
       $this->create_tmp_repository( $data, $xml_result );

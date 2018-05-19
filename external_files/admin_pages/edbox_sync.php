@@ -7,6 +7,7 @@
 //require_once( dirname(  __FILE__ ) . '/admin.php' );
 require_once( PLUGIN_INCLUDES_REPOSITORY . 'class.BoxAdminTwinningListTable.php' );
 require_once( PLUGIN_INCLUDES_REPOSITORY . 'class.BoxAdminBucketManager.php' );
+require_once( PLUGIN_INCLUDES_REPOSITORY . 'Pagination.php' );
 
 if ( ! empty( $_POST[ "blog" ] ) && (! empty( $_POST[ "action" ] )  || ! empty( $_POST[ "action2" ] ) ) ) {
   $newHeader = "Location: edbox_upload_download.php?";
@@ -116,40 +117,7 @@ require_once( 'admin-header.php' );
 ?>
 <div class="wrap">
   <h2><?php echo esc_html( 'Récupération des blogs en ligne' ); ?></h2>
-  <div class="tablenav-pages">
-    <span class="displaying-num" id="nb-elem">
-      0 éléments
-    </span>
-    <span class="pagination-links">
-      <button onClick="firstPage()">
-        «
-      </button>
-      <button onClick="prevPage()">
-        ‹
-      </button>
-      <span class="paging-input">
-        <label for="current-page-selector" class="screen-reader-text">
-          Page actuelle
-        </label>
-        <input class="current-page" id="current-page-selector" type="number" name="paged" value="1" max="1" min="1" size="2" aria-describedby="table-paging" onChange="curPageChange()">
-        <span class="tablenav-paging-text">
-          sur 
-          <span class="total-pages" id="total-pages">
-            1
-          </span>
-        </span>
-      </span>
-      <button onClick="nextPage()">
-        »
-      </button>
-      <button onClick="lastPage()">
-        ›
-      </button>
-    </span>
-    <br/>
-    éléments par page
-    <input type="number" value="10" id="per-page-selector" onChange="perPageChange()" />
-  </div>
+  <?php print_pagination_selector() ?>
   <form method="post">
     <?php
     $myListTable->search_box( 'Rechercher', 'search_id' );
@@ -162,79 +130,16 @@ include ( ABSPATH . 'wp-admin/admin-footer.php' );
 include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsScript.php');
 ?>
 <script src='<?php echo ( plugins_url( PLUGIN_JS_BASE_REPOSITORY . 'ScriptListTable.js') ); ?>'></script>
+<?php
+print_pagination_script();
+refresh_twin_table_function();
+?>
 <script type='text/javascript'>
-  var blogs = [];
-  var per_page = document.getElementById("per-page-selector");
-  var cur_page = document.getElementById("current-page-selector");
-  var nb_elem = document.getElementById("nb-elem");
-  var total_pages = document.getElementById("total-pages");
-
-  function refreshTable() {
-    clearTable();
-    for (var i = 0; (cur_page.value - 1) * per_page.value + i < blogs.length && i < per_page.value; ++i){
-      curBlog = blogs[(cur_page.value - 1) * per_page.value + i];
-      addTwinningsRow(
-        curBlog["twinUid"],
-        curBlog["blogName"],
-        curBlog["date"],
-        curBlog["schoolName"],
-        curBlog["size"]
-      );
-    }
-  }
-
-  function actualizeNbElem() {
-    nb_elem.innerHTML = blogs.length + " element";
-    if (!blogs.empty)
-      nb_elem.innerHTML += "s";
-    total_pages.innerHTML = Math.trunc(blogs.length / per_page.value) + 1;
-    cur_page.max = Math.trunc(blogs.length / per_page.value) + 1;
-  }
-
-  function curPageChange() {
-    if (cur_page.value > Number(total_pages.innerHTML)) {
-      cur_page.value = total_pages.innerHTML;
-    }
-    if (cur_page.value < 1) {
-      cur_page.value = 1;
-    }
-    refreshTable();
-  }
-
-  function perPageChange() {
-    actualizeNbElem();
-    curPageChange()
-  }
-
-  function firstPage() {
-    cur_page.value = 1;
-    refreshTable();
-  }
-
-  function lastPage() {
-    cur_page.value = total_pages.innerHTML;
-    refreshTable();
-  }
-
-  function prevPage() {
-    if (cur_page.value > 1) {
-      cur_page.value--;
-    }
-    refreshTable();
-  }
-
-  function nextPage() {
-    if (cur_page.value < Number(total_pages.innerHTML)) {
-      cur_page.value++;
-    }
-    refreshTable();
-  }
-
  db.ref('schoolNames').once('value').then(function(schoolNamesSnapshot) {
    var schoolNames = schoolNamesSnapshot.val();
-   
    db.ref('twinnings/<?php echo ( PERSONNAL_UID ) ?>').once('value').then(function(twinningSnapshot) {
      var twinningsUid = twinningSnapshot.val();
+     console.log(twinningsUid);
      twinningsUid = twinningsUid.split(',');
 
      for (uid in twinningsUid) {
@@ -242,13 +147,6 @@ include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsSc
 	 var val = snapshot.val();
    var twinUid = snapshot.key;
    for (blogName in val) {
-	   /*addTwinningsRow(
-	     twinUid,
-	     blogName,
-	     val[blogName].date,
-	     schoolNames[twinUid],
-	     val[blogName].size
-     );*/
      blogs.push({
        "twinUid": twinUid,
        "blogName": blogName,

@@ -32,15 +32,16 @@ class Box_Admin_Manager {
 
   private function check_for_uid() {
     include ( BUCKET_CONF_PHP_FILE );
-
+    
     if ( PERSONNAL_UID != 'PERSONNAL_UID' )
       return;
-
-    //const PERSONNAL_UID = $this->generate_uid();
-
+    
     $file_input = "const PERSONNAL_UID		= '" . $this->generate_uid() . "' ;\n?>\n";
-    file_put_contents( '/var/edbox/conf/PHP/bucket.conf.php', $file_input, FILE_APPEND | LOCK_EX );
-    //wp_die( $file_input );
+    $ok = file_put_contents( '/var/edbox/conf/PHP/bucket.conf.php', $file_input, FILE_APPEND | LOCK_EX );
+    if ( $ok == false ) {
+      echo "error during creation of uid.";
+      throw new Exception();
+    }
   }
 
   private function gen_char($index) {

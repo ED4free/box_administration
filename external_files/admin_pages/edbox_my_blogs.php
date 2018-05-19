@@ -8,6 +8,7 @@
 //require_once( dirname(  __FILE__ ) . '/admin.php' );
 require_once( PLUGIN_INCLUDES_REPOSITORY . 'class.BoxAdminTwinningListTable.php' );
 require_once( PLUGIN_INCLUDES_REPOSITORY . 'class.BoxAdminBucketManager.php' );
+require_once( PLUGIN_INCLUDES_REPOSITORY . 'Pagination.php' );
 
 if ( ! empty( $_POST[ "blog" ] ) && (! empty( $_POST[ "action" ] )  || ! empty( $_POST[ "action2" ] ) ) ) {
   $newHeader = "Location: edbox_upload_download.php?";
@@ -130,6 +131,7 @@ require_once( 'admin-header.php' );
 ?>
 <div class="wrap">
   <h2><?php echo esc_html( 'Mes blogs mis en ligne' ); ?></h2>
+  <?php print_pagination_selector(); ?>
   <form method="post">
     <?php
     $myListTable->search_box( 'Rechercher', 'search_id' );
@@ -142,6 +144,10 @@ include ( ABSPATH . 'wp-admin/admin-footer.php' );
 include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsScript.php' );
 ?>
 <script src='<?php echo ( plugins_url( PLUGIN_JS_BASE_REPOSITORY . 'ScriptListTable.js') ); ?>'></script>
+<?php 
+print_pagination_script();
+refresh_my_blog_table_function();
+?>
 <script type='text/javascript'>
  var ref = db.ref( 'schools/<?php echo ( PERSONNAL_UID ); ?>' );
 
@@ -152,12 +158,14 @@ include ( ABSPATH . 'wp-content/plugins/box_administration/includes/FirebaseJsSc
      return;
    }
    for (blogName in val) {
-     addPersonnalBlogsRow(
-       "<?php echo ( PERSONNAL_UID ); ?>",
-       blogName,
-       val[blogName].date,
-       val[blogName].size
-     );
+     blogs.push({
+      'uid': "<?php echo ( PERSONNAL_UID ); ?>",
+      'blogTitle': blogName,
+      'uploadDate': val[blogName]["date"],
+      'size': val[blogName]["size"]
+     })
    }
+   refreshTable();
+   actualizeNbElem();
  });
 </script>

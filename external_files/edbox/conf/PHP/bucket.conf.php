@@ -14,4 +14,4 @@ const WORDPRESS_DB_NAME		= 'wordpress' ;
 /** SYNC UIDS **/
 const TWINNING_USERNAME		= 'jumelage' ;
 const TWINNING_PASSWORD		= 'twinning' ;
-?>
+
